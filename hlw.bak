@@ -1,0 +1,9 @@
+program ct;
+    uses crt;
+    var myname: string;
+begin
+    clrscr;
+    write('Nhập tên của bạn: ');
+    readln(myname);
+    write('Hello ' + myname + '!!');
+end.

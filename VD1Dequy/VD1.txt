@@ -1,0 +1,42 @@
+Cho n thành phố (n được nhập vào từ bàn phím, n<100) có các đường đi nối với nhau được định trước. Một người muốn đi từ thành phố A đến 
+thành phố B trong n thành phố này. 
+Liệt kê tất cả các đường đi của người đó có thể đi biết rằng mỗi thành phố chỉ được đi qua duy nhất một lần. 
+
+File: 
+duongdi.inp
+5 2 5
+1 2
+1 3
+1 5
+2 4
+2 5
+3 4
+3 5
+4 5
+
+duongdi.oup
+2 4 5
+2 5
+2 1 3 5
+....
+
+
+Trên mỗi đoạn đường có giá vé tàu hỏa. Yêu cầu là tìm lộ trình rẻ nhất. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,73 @@
+program btmaudq;
+ uses crt;
+ var f: text;
+ n,a,b,r,s,i,j,csl: integer;
+ dd: array[1..100,1..100] of boolean;
+ ck: array[1..100] of boolean;
+ luuvet: array[1..100] of integer;
+procedure khoitao;
+ var p,q: integer;
+ begin
+  for p:=1 to 100 do
+   for q:=1 to 100 do
+    dd[p,q]:=false;
+ end;
+procedure nhap;
+ var p,q:integer;
+ begin
+  assign(f,'duongdi.inp');
+  reset(f);
+  readln(f,n,a,b);
+  while not(eof(f)) do
+   begin
+    readln(f,r,s);
+    dd[r,s]:=true;
+    dd[s,r]:=true;
+   end;
+  close(f);
+  csl:=1;
+  luuvet[1]:=a;
+  ck[a]:=true;
+  for p:=1 to 100 do
+   ck[p]:=false;
+ end;
+procedure xuat;
+ var p:integer;
+ begin
+  for p:=1 to csl do
+   write(luuvet[p],' ');
+  writeln;
+ end;
+procedure xuly(x:integer);
+ var p:integer;
+ begin
+  for p:=1 to n do
+   begin
+    if ((ck[p]=false) and (dd[x,p]=true) and (p<>b)) then
+     begin
+      inc(csl);
+      luuvet[csl]:=p;
+      ck[p]:=true;
+      xuly(p);
+      ck[p]:=false;
+      luuvet[csl]:=0;
+      dec(csl);
+     end
+    else
+     if ((p=b) and (dd[x,p]=true)) then
+      begin
+       inc(csl);
+       luuvet[csl]:=p;
+       xuat;
+       luuvet[csl]:=0;
+       dec(csl);
+      end;
+   end;
+ end;
+begin
+ clrscr;
+ khoitao;
+ nhap;
+ xuly(a);
+ readln;
+end.

@@ -1,0 +1,20 @@
+hd: 
+n=5;	csl=1; ck[2]=true; luuvet[1]=2;
+a=2;
+b=5;
+
+
+
+xuly(2): p1=1 -> dd[2,1]=true; p=1<>5 -> csl=2;luuvet[2]=1;ck[1]=true -> xuly(1); ck: T T F F F F -> 2 1
+xuly(1): p2=1-3 -> dd[1,3]=true; p=3<>5 -> csl=3;luuvet[3]=3; ck[3]=true -> xuly(3); ck: T T T F F F -> 2 1 3 
+xuly(3): p3=1-4 -> dd[3,4]=true; p=4<>5 -> csl=4;luuvet[4]=4; ck[4]=true -> xuly(4); ck: T T T T F F -> 2 1 3 4 
+xuly(4): p4=1-5 -> dd[4,5]=true; p=5=5 -> csl=5;luuvet[5]=5; -> xuất 2 1 3 4 5 ; luuvet[5]=0; csl=4; 2 1 3 4 -> kết thúc xuly(4)
+xuly(3): p3=4 -> ck[4]=false; luuvet[4]=0; csl=3 -> 2 1 3 ; ck: T T T F F F
+xuly(3): p3=5 -> ck[5]=true; csl=4; luuvet[4]=5; -> xuất: 2 1 3 5 -> luuvet[4]:=0; csl=3; -> kết thức xuly(3);
+xuly(1): p2=3 -> luuvet[3]=0;csl=2;-> ck: T T F F F F -> 2 1
+xuly(1): p2= 4-5 -> csl=3; luuvet[3]=5; 2 1 5  -> csl=2; luuvet[3]=0
+xuly(2): p1=1 -> F T F F F F -> 2 
+xuly(2): p1=2-4 -> ...
+
+
+

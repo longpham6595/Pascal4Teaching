@@ -1,0 +1,21 @@
+Dãy số Wavio là dãy số nguyên thỏa mãn các tính chất: các phần tử đầu sắp xếp thành một dãy tăng dần đến một phần tử đỉnh sau đó giảm dần. 
+Ví dụ dãy số 1 2 3 4 5 2 1 là một dãy Wavio độ dài là 7. Cho một dãy gồm N số nguyên, hãy chỉ ra một dãy con Wavio có độ dài lớn nhất trích từ dãy đó. 
+
+Phân tích trạng thái: 
+n:  1 2  3 4 5 6 7 
+sn: 1 2 3 4 5 2 1
+
+Khoitao: demtt=0; ttht=None <T,G>; batdau=false;
+
+xuly[1] -> batdau=true??->false -> True: demtt=0; ttht=None; batdau=true;
+xuly[2] -> batdau=true??-> true; demtt=0??->0: inc(demtt)-> demtt=1;ttht->T; batdau=true;
+xuly[3] -> batdau=true??-> true; demtt=0??->1; ttht=??-> T ; kt(sn[i]>sn[i-1])=true??-> không thay đổi!
+xuly[4] -> ....
+xuly[5] -> ....
+xuly[6] -> batdau=true??-> true; demtt=0??->1; ttht=??-> T ; kt(sn[i]>sn[i-1])=true??-> false: inc(demtt); switch(ttht)-> ttht=G
+xuly[7] -> batdau=true??-> true; demtt=0??->1; ttht=??-> T ; kt(sn[i]<sn[i-1])=true??-> false
+Break: 1) chạy tới vị trí demtt=3 đầu tiên thì xuất ra ngay. Trả lại thủ tục khoitao. 
+	2) Khi chạy tới vị trí độ dài mảng thì xuất ra kết quả ngay. Trả lại thủ tục khoitao. 
+
+Thủ tục: khoitao; nhap;
+Hàm: xuly; switch;
