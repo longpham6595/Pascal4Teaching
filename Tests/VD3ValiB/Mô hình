@@ -1,4 +1,61 @@
-Có n đồ vật, vật thứ i có trọng lượng Ai và giá trị Bi. 
-Hãy chọn ra một số các đồ vật, mỗi vật một cái để xếp 
-vào một vali có trọng lượng tối đa W sao cho tổng giá trị
-của vali là lớn nhất.
+ Bài toán cái ba lô 0-1 (mỗi đồ vật có số lượng 1)
+BÀI TOÁN
+Cho n vật có khối lượng lần lượt là a1, a2, …, an và giá trị lần lượt là v1, v2, …, vn
+Cho một ba lô có tải trọng là m
+Yêu cầu chọn một số vật để vào ba lô sao cho tổng khối lượng của các vật không vượt quá m và tổng giá trị của các vật là lớn nhất có thể.
+
+Dữ liệu vào:
+- Dòng đầu ghi số n và m
+- Dòng thứ i trong n dòng tiếp theo, mỗi dòng ghi 2 số ai và vi
+Kết quả: 
+- Dòng thứ nhất ghi tổng giá trị lớn nhất tìm được.
+- Dòng thứ hai ghi ra chỉ số các vật được chọn.
+Ví dụ:
+Input
+6 10
+2 2
+5 9
+7 10
+4 4
+6 7
+9 12
+
+Output
+13
+2 4
+
+HƯỚNG DẪN
+Gọi f[i, j] là tổng giá trị lớn nhất khi chọn i vật đầu tiên sao cho tổng khối lượng không vượt quá j. Khi đó ta có:
+
+    Cơ sở Quy hoạch động f[0, j] = 0 (với mọi j = 0...m)
+    Kết quả cần tìm: f[n, m]
+    f[i, j] được tính như sau:
+        Trường hợp vật i không được chọn: f[i, j] = f[i – 1, j]
+        Trường hợp vật i được chọn: f[i, j] = f[i – 1, j – ai] + vi
+        Lưu ý: trường hợp này chỉ xảy ra khi ai ≤ j
+
+       f[i, j] = giá trị lớn nhất của 2 trường hợp trên.
+
+Đoạn code cho công thức trên như sau:
+for (int j = 0; j <= m; ++j) f[0][j] = 0;
+for (int i = 1; i <= n; ++i) {
+  for (int j  = 1; j <= m; ++j) {
+    f[i][j] = f[i-1][j];
+    if (a[i] <= j) f[i][j] = max(f[i][j], f[i-1][j-a[i]] + v[i]);
+  }
+}
+
+Ta có bảng quy hoạch động sau:
+
+
+Truy vết:
+Theo công thức trên ta thấy nếu f[i, j] = f[i-1, j] thì vật thứ i này không được chọn. 
+Ngược lại vật thứ i sẽ được chọn, khi ta bỏ vật thứ i ra thì khối lượng của ba lô sẽ giảm đi ai. 
+Khi đó ta có đoạn code truy vết như sau:
+int j = m;
+vector<int> ans;
+for (int i = n;  i > 0; --i) {
+ if (f[i][j] == f[i-1][j]) continue;
+ ans.push_back(i);
+ j -= a[i];
+}
