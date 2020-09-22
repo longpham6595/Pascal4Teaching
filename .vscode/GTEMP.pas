@@ -3,10 +3,11 @@ Program ex4;
 
 Uses crt;
 
-Var ST,SL,csm,i,j,PendingTotal,min: integer;
+Var ST,SL,csm,i,j,PendingTotal,min,cs_fin: integer;
   Li,Si: array [1..6] Of integer;
-  listOut: array [1..6] Of integer;
-  saveOut: array [1..100000,1..6] Of integer;
+  listOut: array [0..6] Of integer;
+  fin_Check: array [1..100000] Of integer;
+  saveOut: array [1..100000,0..6] Of integer;
 
 Procedure nhap;
 
@@ -37,18 +38,18 @@ End;
 
 
 
-
-
-
-
 //Lưu dữ liệu khi nhận được kết quả thích hợp trong quá trình đệ quy vét cạn
 Procedure saveOutcome;
 
 Var t: integer;
 Begin
   inc(csm);
+  saveOut[csm][0] := 0;
   For t:=1 To SL Do
-    saveOut[csm][t] := listOut[t];
+    Begin
+      saveOut[csm][t] := listOut[t];
+      saveOut[csm][0] := saveOut[csm][0] + listOut[t];
+    End;
 End;
 
 //Load trạng thái này lên để kiểm định
@@ -61,9 +62,6 @@ Begin
   If (PendingTotal = ST) Then
     saveOutcome;
 End;
-
-
-
 
 
 
@@ -86,15 +84,18 @@ Begin
       Begin
         load(t);
         solver;
-        writeln(t,' : ',listOut[1],' - ',listOut[2],' - ',listOut[3],' - ',
-                listOut[4],' - ',listOut[5],' - ',listOut[6],' -> ',PendingTotal
-                ,'.');
+
+
+//writeln(t,' : ',listOut[1],' - ',listOut[2],' - ',listOut[3],' - ',listOut[4],' - ',listOut[5],' - ',listOut[6],' -> ',PendingTotal, ' <-> ', listOut[0],'.');
         unload(t);
         //delay(100);
       End;
+
+  //Xử lý tạo mảng check để check số lượng trùng
+
 End;
 
-Function csmin:integer;
+Function csmin: integer;
 
 Var t,l,temp_kq,cs,min: integer;
 Begin
@@ -103,7 +104,7 @@ Begin
     Begin
       temp_kq := 0;
       For l:=1 To SL Do
-          temp_kq := temp_kq + saveOut[t][l];
+        temp_kq := temp_kq + saveOut[t][l];
       If ((min = 0) Or (temp_kq < min)) Then
         Begin
           cs := t;
@@ -112,6 +113,40 @@ Begin
     End;
   csmin := cs;
 End;
+
+function check(x:integer):boolean;
+var kq,per_item: boolean;
+  t, k: integer;
+begin
+  //Mặc định kết quả là True tức là đây là chuỗi kết quả mới
+  kq:= true;
+  for t:= 1 to cs_fin do
+    begin
+      //Mặc định ban đầu chuỗi saveOut[x] và chuỗi saveOut[fin_Check[t]] là giống nhau
+      per_item := true;
+      for k:=1 to SL do
+        if (saveOut[x][k] <> saveOut[fin_Check[t]][k]) Then
+          //Nếu chuỗi có một phần tử khác nhau so với chuỗi t đang so sánh trong dãy kết quả thì trả về chuỗi này khác chuỗi t
+          per_item := false;
+      //Nếu chuỗi saveOut[x] và chuỗi saveOut[fin_Check[t]] là giống nhau thì trả về kết quả lặp
+      if per_item Then
+        kq := false;
+    end;
+    check := kq;
+end;
+
+Procedure cs_check;
+
+Var t: integer;
+Begin
+  for t:=1 to csm do
+   if check(t) Then
+    begin
+      inc(cs_fin);
+      fin_Check[cs_fin] := t;
+    end;
+End;
+
 
 Procedure xuat;
 
@@ -123,13 +158,16 @@ Begin
   If csm = 0 Then
     writeln(f,csm)
   Else
-        Begin
-          writeln(f,csm,' ',min);
-          k := csmin;
-          For t:= 1 To SL Do
-            writeln(f,Li[k],' ',saveOut[k][t]);
-        End;
+    Begin
+      k := csmin;
+      writeln(f,cs_fin,' ',saveOut[k][0]);
+
+      For t:= 1 To SL Do
+        writeln(f,Li[k],' ',saveOut[k][t]);
+    End;
   close(f);
+  //Xác định xuất thành công
+  writeln('Finished!!!');
 End;
 
 Begin
@@ -146,9 +184,15 @@ Begin
   writeln;
 
   solver;
-
+  cs_check;
   xuat;
 
-
+  //Xuất kiểm tra dữ liệu đầu ra
+  For i:=1 To cs_fin Do
+    Begin
+      For j:= 0 To SL Do
+        write(saveOut[fin_Check[i]][j],' - ');
+      writeln();
+    End;
   readln
 End.
