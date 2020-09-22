@@ -1,0 +1,4 @@
+Có n đồ vật, vật thứ i có trọng lượng Ai và giá trị Bi. 
+Hãy chọn ra một số các đồ vật, mỗi vật một cái để xếp 
+vào một vali có trọng lượng tối đa W sao cho tổng giá trị
+của vali là lớn nhất.

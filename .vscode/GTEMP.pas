@@ -1,198 +1,111 @@
 
-Program ex4;
+Program ct;
 
 Uses crt;
 
-Var ST,SL,csm,i,j,PendingTotal,min,cs_fin: integer;
-  Li,Si: array [1..6] Of integer;
-  listOut: array [0..6] Of integer;
-  fin_Check: array [1..100000] Of integer;
-  saveOut: array [1..100000,0..6] Of integer;
+Var i,n,csl: integer;
+  f: text;
+  sn,s1,s2,s: array [0..10000] Of longint;
+  s1luu,s2luu,sluu: array [0..10000] Of string;
+
 
 Procedure nhap;
-
-Var f: text;
-  t: integer;
 Begin
-  assign(f,'Bai4.inp');
+  assign(f,'wavio.inp');
   reset(f);
-  readln(f,ST,SL);
-  t := 0;
-  While (Not eof(f)) Do
-    Begin
-      inc(t);
-      readln(f,Li[t],Si[t]);
-    End;
+  read(f,n);
+  For i:=1 To n Do
+    read(f,sn[i]);
   close(f);
-  csm := t;
-
-  //Khởi tạo chỉ số lưu bằng 0
-  csm := 0;
-  //Khởi tạo PendingTotal bằng 0
-  PendingTotal := 0;
-  //Khởi tạo cho listOut bằng 0
-  For i:=1 To 6 Do
-    listOut[i] := 0;
+  csl := 0;
 End;
+Procedure xulymang_1;
 
-
-
-
-//Lưu dữ liệu khi nhận được kết quả thích hợp trong quá trình đệ quy vét cạn
-Procedure saveOutcome;
-
-Var t: integer;
+Var max,csltam,p: integer;
 Begin
-  inc(csm);
-  saveOut[csm][0] := 0;
-  For t:=1 To SL Do
+  For i:=1 To n Do
     Begin
-      saveOut[csm][t] := listOut[t];
-      saveOut[csm][0] := saveOut[csm][0] + listOut[t];
+      s1[i] := 1;
+      str(sn[i],s1luu[i]);
     End;
-End;
-
-//Load trạng thái này lên để kiểm định
-//Chỉ số đưa vào có mệnh giá tương ứng
-Procedure load(x:integer);
-
-Begin
-  inc(listOut[x]);
-  PendingTotal := PendingTotal + Li[x];
-  If (PendingTotal = ST) Then
-    saveOutcome;
-End;
-
-
-
-
-//Unload trạng thái xuống để trả lại trạng thái cũ trong quá trình đệ quy
-Procedure unload(x:integer);
-
-Begin
-  dec(listOut[x]);
-  PendingTotal := PendingTotal - Li[x];
-End;
-
-//Xử lý quá trình duyệt qua các kết quả khả dĩ
-Procedure solver;
-
-Var t: integer;
-Begin
-  For t :=1 To SL Do
-    If ((Si[t] > listOut[t]) And (PendingTotal < ST)) Then
-      Begin
-        load(t);
-        solver;
-
-
-//writeln(t,' : ',listOut[1],' - ',listOut[2],' - ',listOut[3],' - ',listOut[4],' - ',listOut[5],' - ',listOut[6],' -> ',PendingTotal, ' <-> ', listOut[0],'.');
-        unload(t);
-        //delay(100);
-      End;
-
-  //Xử lý tạo mảng check để check số lượng trùng
-
-End;
-
-Function csmin: integer;
-
-Var t,l,temp_kq,cs,min: integer;
-Begin
-  min := 0;
-  For t:=1 To csm Do
-    Begin
-      temp_kq := 0;
-      For l:=1 To SL Do
-        temp_kq := temp_kq + saveOut[t][l];
-      If ((min = 0) Or (temp_kq < min)) Then
+  i := 1;
+  Repeat
+    inc(i);
+    max := 1;
+    For p:=1 To i-1 Do
+      If (sn[p]<sn[i]) And (max<(s1[p]+1)) Then
         Begin
-          cs := t;
-          min := temp_kq;
+          max := s1[p]+1;
+          csltam := p;
         End;
-    End;
-  csmin := cs;
+    If csltam>0 Then
+      Begin
+        s1luu[i] := s1luu[csltam]+' '+s1luu[i];
+        s1[i] := s1[csltam]+1;
+        csltam := 0;
+      End
+    Else
+      csltam := 0;
+  Until i>n;
 End;
+Procedure xulymang_2;
 
-function check(x:integer):boolean;
-var kq,per_item: boolean;
-  t, k: integer;
-begin
-  //Mặc định kết quả là True tức là đây là chuỗi kết quả mới
-  kq:= true;
-  for t:= 1 to cs_fin do
-    begin
-      //Mặc định ban đầu chuỗi saveOut[x] và chuỗi saveOut[fin_Check[t]] là giống nhau
-      per_item := true;
-      for k:=1 to SL do
-        if (saveOut[x][k] <> saveOut[fin_Check[t]][k]) Then
-          //Nếu chuỗi có một phần tử khác nhau so với chuỗi t đang so sánh trong dãy kết quả thì trả về chuỗi này khác chuỗi t
-          per_item := false;
-      //Nếu chuỗi saveOut[x] và chuỗi saveOut[fin_Check[t]] là giống nhau thì trả về kết quả lặp
-      if per_item Then
-        kq := false;
-    end;
-    check := kq;
-end;
-
-Procedure cs_check;
-
-Var t: integer;
+Var p,max,csltam: integer;
 Begin
-  for t:=1 to csm do
-   if check(t) Then
-    begin
-      inc(cs_fin);
-      fin_Check[cs_fin] := t;
-    end;
-End;
-
-
-Procedure xuat;
-
-Var f: text;
-  t,k: integer;
-Begin
-  assign(f,'Bai4.oup');
-  rewrite(f);
-  If csm = 0 Then
-    writeln(f,csm)
-  Else
+  For p:=1 To n Do
     Begin
-      k := csmin;
-      writeln(f,cs_fin,' ',saveOut[k][0]);
-
-      For t:= 1 To SL Do
-        writeln(f,Li[k],' ',saveOut[k][t]);
+      s2[p] := 1;
+      str(sn[p],s2luu[p]);
     End;
-  close(f);
-  //Xác định xuất thành công
-  writeln('Finished!!!');
+  i := n;
+  csltam := 0;
+  While i>0 Do
+    Begin
+      dec(i);
+      max := 1;
+      For p:=n Downto (i+1) Do
+        If (sn[p]<sn[i]) And (max<(s2[p]+1)) Then
+          Begin
+            csltam := p;
+            max := s2[p]+1;
+          End;
+      If csltam <> 0 Then
+        Begin
+          s2[i] := max;
+          s2luu[i] := s2luu[i]+' '+s2luu[csltam];
+        End;
+      csltam := 0;
+    End;
 End;
+Procedure xuly;
 
+Var p,t,csm: integer;
+Begin
+  For p:=1 To n Do
+    Begin
+      t := pos(' ',s2luu[p]);
+      If t=0 Then
+        s2luu[p] := ''
+      Else
+        delete(s2luu[p],1,t-1);
+    End;
+  For p:=1 To n Do
+    Begin
+      s[p] := s1[p]+s2[p]-1;
+      sluu[p] := s1luu[p]+s2luu[p];
+    End;
+  csm := 1;
+  For p:=2 To n Do
+    If s[csm]<s[p] Then
+      csm := p;
+  writeln(s[csm]);
+  write(sluu[csm]);
+End;
 Begin
   clrscr;
   nhap;
-
-  //Test thử dữ liệu đầu vào
-  writeln(ST,' - ',SL);
-  For i:=1 To SL Do
-    writeln(Li[i],' - ',Si[i]);
-
-  For i:=1 To 6 Do
-    write(listOut[i],' - ');
-  writeln;
-
-  solver;
-  cs_check;
-  xuat;
-
-  //Xuất kiểm tra dữ liệu đầu ra
-  For i:=1 To cs_fin Do
-    Begin
-      For j:= 0 To SL Do
-        write(saveOut[fin_Check[i]][j],' - ');
-      writeln();
-    End;
-  readln
+  xulymang_1;
+  xulymang_2;
+  xuly;
+  readln;
 End.
