@@ -84,8 +84,6 @@ Begin
       Begin
         load(t);
         solver;
-
-
 //writeln(t,' : ',listOut[1],' - ',listOut[2],' - ',listOut[3],' - ',listOut[4],' - ',listOut[5],' - ',listOut[6],' -> ',PendingTotal, ' <-> ', listOut[0],'.');
         unload(t);
         //delay(100);
@@ -163,7 +161,7 @@ Begin
       writeln(f,cs_fin,' ',saveOut[k][0]);
 
       For t:= 1 To SL Do
-        writeln(f,Li[k],' ',saveOut[k][t]);
+        writeln(f,Li[t],' ',saveOut[k][t]);
     End;
   close(f);
   //Xác định xuất thành công
