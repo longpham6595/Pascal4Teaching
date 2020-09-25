@@ -134,19 +134,20 @@ Begin
 
     End;
 End;
-function findmax:integer;
-var csmax, iditem: integer;
-begin
-  iditem:= 1;
-  csmax:= 1;
-  while iditem < csl do
-    begin
+Function findmax: integer;
+
+Var csmax, iditem: integer;
+Begin
+  iditem := 1;
+  csmax := 1;
+  While iditem < csl Do
+    Begin
       inc(iditem);
-      if sopt[iditem] > sopt[csmax] then
-        csmax:=iditem;
-    end;
-    findmax:=csmax;
-end;
+      If sopt[iditem] > sopt[csmax] Then
+        csmax := iditem;
+    End;
+  findmax := csmax;
+End;
 Begin
   clrscr;
   nhap;

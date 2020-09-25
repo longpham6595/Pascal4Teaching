@@ -1,111 +1,137 @@
 
-Program ct;
+Program vlb;
 
 Uses crt;
 
-Var i,n,csl: integer;
-  f: text;
-  sn,s1,s2,s: array [0..10000] Of longint;
-  s1luu,s2luu,sluu: array [0..10000] Of string;
-
+Var n,m,cs_oup: integer;
+  a,v,list_oup: array [0..100000] Of integer;
+  bg: array[0..10000,0..10000] Of integer;
+  truyvet: array[0..10000,0..10000] Of integer;
+  total_oup: integer;
 
 Procedure nhap;
+
+Var f: text;
+  t: integer;
 Begin
-  assign(f,'wavio.inp');
+  assign(f,'vali.inp');
   reset(f);
-  read(f,n);
-  For i:=1 To n Do
-    read(f,sn[i]);
+  readln(f,n,m);
+  t := 0;
+  While Not(eof(f)) Do
+    Begin
+      inc(t);
+      readln(f,a[t],v[t]);
+    End;
   close(f);
-  csl := 0;
 End;
-Procedure xulymang_1;
 
-Var max,csltam,p: integer;
-Begin
-  For i:=1 To n Do
-    Begin
-      s1[i] := 1;
-      str(sn[i],s1luu[i]);
-    End;
-  i := 1;
-  Repeat
-    inc(i);
-    max := 1;
-    For p:=1 To i-1 Do
-      If (sn[p]<sn[i]) And (max<(s1[p]+1)) Then
-        Begin
-          max := s1[p]+1;
-          csltam := p;
-        End;
-    If csltam>0 Then
-      Begin
-        s1luu[i] := s1luu[csltam]+' '+s1luu[i];
-        s1[i] := s1[csltam]+1;
-        csltam := 0;
-      End
-    Else
-      csltam := 0;
-  Until i>n;
-End;
-Procedure xulymang_2;
+Procedure kiemtranhap;
 
-Var p,max,csltam: integer;
+Var t: integer;
 Begin
-  For p:=1 To n Do
-    Begin
-      s2[p] := 1;
-      str(sn[p],s2luu[p]);
-    End;
-  i := n;
-  csltam := 0;
-  While i>0 Do
-    Begin
-      dec(i);
-      max := 1;
-      For p:=n Downto (i+1) Do
-        If (sn[p]<sn[i]) And (max<(s2[p]+1)) Then
-          Begin
-            csltam := p;
-            max := s2[p]+1;
-          End;
-      If csltam <> 0 Then
-        Begin
-          s2[i] := max;
-          s2luu[i] := s2luu[i]+' '+s2luu[csltam];
-        End;
-      csltam := 0;
-    End;
+  For t:=1 To n Do
+    writeln(a[t],' - ',v[t]);
 End;
+
+Procedure khoitao;
+
+Var i,j: integer;
+Begin
+  For j:= 0 To m Do
+    bg[0][j] := 0;
+  For i:=0 To n Do
+    bg[i][0] := 0;
+
+  // Khởi tạo dãy Lưu
+  cs_oup := 0;
+  total_oup := 0;
+End;
+
+
 Procedure xuly;
 
-Var p,t,csm: integer;
+Var i,j: integer;
 Begin
-  For p:=1 To n Do
-    Begin
-      t := pos(' ',s2luu[p]);
-      If t=0 Then
-        s2luu[p] := ''
-      Else
-        delete(s2luu[p],1,t-1);
-    End;
-  For p:=1 To n Do
-    Begin
-      s[p] := s1[p]+s2[p]-1;
-      sluu[p] := s1luu[p]+s2luu[p];
-    End;
-  csm := 1;
-  For p:=2 To n Do
-    If s[csm]<s[p] Then
-      csm := p;
-  writeln(s[csm]);
-  write(sluu[csm]);
+  For i:=1 To n Do
+    For j:=1 To m Do
+      Begin
+        bg[i][j] := bg[i-1][j];
+        truyvet[i][j] := truyvet[i-1][j];
+        If (a[i] <= j) And (bg[i][j] <= (bg[i-1][j-a[i]]+v[i])) Then
+          Begin
+            bg[i][j] := bg[i-1][j-a[i]]+v[i];
+            truyvet[i][j] := i;
+          End;
+      End;
 End;
+
+Procedure kiemtrakqxl;
+
+Var i,j: integer;
+Begin
+  For i:=0 To n Do
+    Begin
+      For j:=0 To m Do
+        write(bg[i][j]:3,' - ');
+      writeln;
+    End;
+  writeln;
+  For i:=0 To n Do
+    Begin
+      For j:=0 To m Do
+        write(truyvet[i][j]:3,' - ');
+      writeln;
+    End;
+End;
+
+procedure xuatkq;
+var tracer,cur_weight,i: integer;
+    f:text;
+begin
+    total_oup := bg[n][m];
+    tracer :=n;
+    cur_weight := m;
+    while tracer <> 0 do
+        begin
+            inc(cs_oup);
+            list_oup[cs_oup] := truyvet[tracer][cur_weight];
+            cur_weight := cur_weight - a[truyvet[tracer][cur_weight]];
+            tracer := truyvet[tracer][cur_weight];
+            writeln(tracer,' - ', cur_weight);
+        end;
+
+    //Tiến hành test xuất kết quả ra màn hình
+    //writeln;
+    writeln(total_oup);
+    for i:=1 to cs_oup do
+        write(list_oup[i],' - ');
+
+    //Tiến hành xuất ra file
+    assign(f,'vali.oup');
+    rewrite(f);
+    writeln(f,total_oup);
+    for i:=cs_oup downto 1 do
+        write(f,list_oup[i],' ');
+    close(f);
+end;
+
+
+
+
+
+
+
+
+
+
 Begin
   clrscr;
   nhap;
-  xulymang_1;
-  xulymang_2;
+  kiemtranhap;
+  khoitao;
   xuly;
+  kiemtrakqxl;
+  xuatkq;
   readln;
 End.
