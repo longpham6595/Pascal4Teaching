@@ -118,13 +118,6 @@ end;
 
 
 
-
-
-
-
-
-
-
 Begin
   clrscr;
   nhap;
