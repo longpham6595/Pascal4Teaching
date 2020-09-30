@@ -13,7 +13,7 @@ Procedure nhap;
 Begin
   assign(f,'wavio.inp');
   reset(f);
-  read(f,n);
+  readln(f,n);
   For i:=1 To n Do
     read(f,sn[i]);
   close(f);

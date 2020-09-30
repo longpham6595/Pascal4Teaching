@@ -116,8 +116,6 @@ begin
     close(f);
 end;
 
-
-
 Begin
   clrscr;
   nhap;
