@@ -19,6 +19,7 @@ Begin
   close(f);
   csl := 0;
 End;
+
 Procedure xulymang_1;
 
 Var max,csltam,p: integer;
